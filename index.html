@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>❤️ For My Love ❤️</title>
+<title>❤️</title>
 
 <style>
 *{
@@ -20,13 +20,15 @@ html,body{
 }
 
 body{
-    cursor:none;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
-/* Slides */
+/* Slide */
 
 .slide{
-    position:fixed;
+    position:absolute;
     inset:0;
 
     display:flex;
@@ -34,87 +36,57 @@ body{
     align-items:center;
 
     opacity:0;
-    transition:opacity 3s ease;
+    transition:opacity 2.5s ease-in-out;
 }
 
 .slide.active{
     opacity:1;
 }
 
-/* Images */
+/* Image */
 
 .slide img{
-    width:100%;
-    height:100%;
-    object-fit:contain; /* Keeps images sharp */
-    animation:kenburns 8s ease-in-out forwards;
-    user-select:none;
-    pointer-events:none;
-}
 
-/* Romantic zoom */
+    max-width:90vw;
+    max-height:90vh;
 
-@keyframes kenburns{
+    width:auto;
+    height:auto;
 
-0%{
-transform:scale(1);
-filter:brightness(.95);
-}
+    object-fit:contain;
 
-50%{
-transform:scale(1.03);
-filter:brightness(1);
-}
+    border-radius:18px;
 
-100%{
-transform:scale(1.06);
-filter:brightness(1.03);
-}
+    animation:zoom 7s ease-in-out forwards;
+
+    box-shadow:
+    0 0 60px rgba(255,255,255,.08),
+    0 30px 90px rgba(0,0,0,.65);
 
 }
 
-/* Soft vignette */
-
-.vignette{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    background:radial-gradient(circle,
-        rgba(0,0,0,0) 45%,
-        rgba(0,0,0,.25) 100%);
-}
-
-/* Floating particles */
-
-.particle{
-    position:fixed;
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    background:rgba(255,255,255,.4);
-    animation:float linear infinite;
-}
-
-@keyframes float{
+@keyframes zoom{
 
 from{
-transform:translateY(110vh);
-opacity:0;
-}
-
-20%{
-opacity:.8;
-}
-
-80%{
-opacity:.8;
+transform:scale(1);
 }
 
 to{
-transform:translateY(-20vh);
-opacity:0;
+transform:scale(1.04);
 }
 
+}
+
+/* Vignette */
+
+body::after{
+content:"";
+position:fixed;
+inset:0;
+pointer-events:none;
+background:radial-gradient(circle,
+rgba(0,0,0,0) 45%,
+rgba(0,0,0,.45) 100%);
 }
 </style>
 
@@ -122,8 +94,6 @@ opacity:0;
 <body>
 
 <div id="slides"></div>
-
-<div class="vignette"></div>
 
 <script>
 
@@ -143,18 +113,18 @@ const images=[
 
 const container=document.getElementById("slides");
 
-images.forEach((src,index)=>{
+images.forEach((src,i)=>{
 
 const slide=document.createElement("div");
 slide.className="slide";
 
 const img=document.createElement("img");
 img.src=src;
+img.draggable=false;
 
 slide.appendChild(img);
 
-if(index===0)
-slide.classList.add("active");
+if(i===0) slide.classList.add("active");
 
 container.appendChild(slide);
 
@@ -172,32 +142,13 @@ current=(current+1)%slides.length;
 
 slides[current].classList.add("active");
 
-},6000);
+},5500);
 
-// Preload images
+// Preload
 images.forEach(src=>{
 const img=new Image();
 img.src=src;
 });
-
-// Romantic floating particles
-for(let i=0;i<35;i++){
-
-const p=document.createElement("div");
-
-p.className="particle";
-
-p.style.left=Math.random()*100+"vw";
-
-p.style.animationDuration=(10+Math.random()*12)+"s";
-
-p.style.animationDelay=(-Math.random()*20)+"s";
-
-p.style.opacity=Math.random();
-
-document.body.appendChild(p);
-
-}
 
 </script>
 
